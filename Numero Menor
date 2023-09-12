@@ -1,0 +1,36 @@
+# Inicializar registros con valores de entrada
+.data
+    num1:   .word   7       # Primer número
+    num2:   .word   12      # Segundo número
+    num3:   .word   5       # Tercer número
+    resultado:   .word   0  # Variable para almacenar el número menor
+
+.text
+    # Cargar el primer número en registro $t0
+    lw $t0, num1
+
+    # Cargar el segundo número en registro $t1
+    lw $t1, num2
+
+    # Cargar el tercer número en registro $t2
+    lw $t2, num3
+
+    # Comparar $t0 y $t1 para encontrar el número menor
+    slt $t3, $t0, $t1   # $t3 = 1 si $t0 < $t1, 0 de lo contrario
+    beqz $t3, menor_1   # Saltar a menor_1 si $t0 < $t1
+
+    # Si $t0 no es menor que $t1, $t1 es el número menor
+    move $t4, $t1
+    j fin
+
+menor_1:
+    # $t0 es menor que $t1, por lo que $t0 es el número menor
+    move $t4, $t0
+
+fin:
+    # Almacenar el número menor en la variable "resultado"
+    sw $t4, resultado
+
+    # Terminar el programa
+    li $v0, 10
+    syscall
