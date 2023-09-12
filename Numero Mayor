@@ -1,0 +1,31 @@
+.data
+    num1: .word 5        # Primer número
+    num2: .word 10       # Segundo número
+    num3: .word 3        # Tercer número
+    max:  .word 0        # Variable para almacenar el número mayor
+
+.text
+    main:
+        # Cargar num1 en $t0
+        lw $t0, num1
+
+        # Comparar con num2
+        lw $t1, num2
+        bgt $t0, $t1, mayor_num1
+        # Si num1 no es mayor que num2, cargar num2 en $t0
+        lw $t0, num2
+
+    mayor_num1:
+        # Comparar con num3
+        lw $t1, num3
+        bgt $t0, $t1, encontrado_maximo
+        # Si num2 o num1 no es mayor que num3, cargar num3 en $t0
+        lw $t0, num3
+
+    encontrado_maximo:
+        # El número mayor se encuentra en $t0
+        # Puedes usar $t0 o almacenarlo en la dirección de memoria max según tu preferencia
+
+        # Terminar el programa
+        li $v0, 10      # Cargar el código de salida (10 para salir del programa)
+        syscall
