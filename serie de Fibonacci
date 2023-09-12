@@ -1,0 +1,49 @@
+.data
+    N:      .word   10          # Número de términos a generar
+    fib:    .space  40          # Espacio para almacenar la serie de Fibonacci
+    newline: .asciiz "\n"       # Cadena de salto de línea para imprimir
+
+.text
+    # Inicialización de registros
+    la $t0, N                    # Cargar la dirección de N en $t0
+    lw $t1, 0($t0)               # Cargar el valor de N en $t1
+
+    # Inicializar los primeros dos términos de Fibonacci
+    li $t2, 0                    # Inicializar F(0) = 0
+    li $t3, 1                    # Inicializar F(1) = 1
+
+    # Inicializar el índice del término actual en la serie
+    li $t4, 2                    # Comenzamos desde F(2)
+
+    # Inicio del bucle para generar la serie de Fibonacci
+fib_loop:
+    # Comprobar si hemos alcanzado el número deseado de términos
+    beq $t4, $t1, end_fib_loop   # Si el índice es igual a N, salimos del bucle
+
+    # Calcular el próximo término de Fibonacci: F(n) = F(n-1) + F(n-2)
+    add $t5, $t2, $t3            # $t5 = F(n-1) + F(n-2)
+
+    # Imprimir el valor del término actual
+    move $a0, $t5                # Cargar el valor en $a0 para imprimirlo
+    li $v0, 1                    # Código de servicio para imprimir entero
+    syscall
+
+    # Imprimir una coma y un espacio
+    li $v0, 4                    # Código de servicio para imprimir una cadena
+    la $a0, newline              # Cargar la dirección de newline
+    syscall
+
+    # Actualizar los valores para el próximo término
+    move $t2, $t3                # $t2 = F(n-2)
+    move $t3, $t5                # $t3 = F(n-1)
+
+    # Incrementar el índice del término actual
+    addi $t4, $t4, 1             # $t4++
+
+    # Saltar de nuevo al inicio del bucle
+    j fib_loop
+
+end_fib_loop:
+    # Terminar el programa
+    li $v0, 10                   # Código de servicio para terminar
+    syscall
